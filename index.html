@@ -6,12 +6,12 @@
 <meta name="color-scheme" content="light only" />
 <!-- 계좌/연락처 노출되므로 검색엔진 수집 차단 -->
 <meta name="robots" content="noindex, nofollow" />
-<title>김신랑 ♥ 박신부 결혼합니다</title>
+<title>양수혁 ♥ 옥연서 결혼합니다</title>
 
 <!-- 카톡 링크 미리보기. 이미지 교체 후엔 카카오 공유 디버거에서 캐시 초기화 -->
 <meta property="og:type" content="website" />
-<meta property="og:title" content="김신랑 ♥ 박신부 결혼합니다" />
-<meta property="og:description" content="2027년 5월 15일 토요일 오후 1시, OO웨딩홀 3층 그랜드홀" />
+<meta property="og:title" content="양수혁 ♥ 옥연서 결혼합니다" />
+<meta property="og:description" content="2027년 3월 6일 토요일, 더 프라미스 웨딩 컨벤션" />
 <meta property="og:image" content="https://ssanay88.github.io/arong-wedding/images/og.jpg" />
 <meta property="og:url" content="https://ssanay88.github.io/arong-wedding/" />
 
@@ -330,7 +330,7 @@
 <!-- Kakao JS SDK (공유) -->
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
 <!-- Kakao Maps SDK: appkey에 JavaScript 키 -->
-<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_KAKAO_JS_KEY&autoload=false"></script>
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=6c0e9f0a8fe71b8f20a75959dc1503dd&autoload=false"></script>
 
 <script>
 /* ============================================================
@@ -338,14 +338,14 @@
  * ============================================================ */
 const CONFIG = {
   siteUrl: "https://ssanay88.github.io/arong-wedding/",
-  kakaoJsKey: "YOUR_KAKAO_JS_KEY",
+  kakaoJsKey: "6c0e9f0a8fe71b8f20a75959dc1503dd",
   ogImage: "images/og.jpg",
 
-  groom: { name: "김신랑", father: "김아버지", mother: "이어머니", relation: "장남" },
-  bride: { name: "박신부", father: "박아버지", mother: "최어머니", relation: "차녀" },
+  groom: { name: "양수혁", father: "양재호", mother: "배영신", relation: "장남" },
+  bride: { name: "옥연서", father: "옥동일", mother: "", relation: "장녀" },
 
   // KST 기준, ISO 8601 + 오프셋
-  dateTime: "2027-05-15T13:00:00+09:00",
+  dateTime: "2027-03-06T12:00:00+09:00", // TODO: 예식 시간 미정 (임시 12시)
 
   greeting:
     "서로가 마주 보며 다져온 사랑을\n이제 함께 한곳을 바라보며\n걸어가려 합니다.\n\n저희 두 사람의 새로운 시작을\n축복해 주시면 감사하겠습니다.",
@@ -359,41 +359,31 @@ const CONFIG = {
   ],
 
   venue: {
-    name: "OO웨딩홀 3층 그랜드홀",
-    mapName: "OO웨딩홀", // 길찾기 목적지 이름
-    address: "서울특별시 OO구 OO로 123",
-    lat: 37.5665,
-    lng: 126.9780,
+    name: "더 프라미스 웨딩 컨벤션",
+    mapName: "더 프라미스 웨딩 컨벤션", // 길찾기 목적지 이름
+    address: "경북 경주시 보불로 391 룩스타워 6층 (강동워터파크 맞은편)",
+    // 보불로 391 주소 기준 좌표. 실제 건물 위치와 조금 다를 수 있음
+    lat: 35.8232653,
+    lng: 129.2962386,
   },
   transport: [
-    { title: "지하철", desc: "O호선 OO역 O번 출구 도보 5분" },
-    { title: "버스", desc: "OO정류장 하차 (간선 000, 지선 0000)" },
-    { title: "주차", desc: "건물 지하 주차장 2시간 무료" },
+    {
+      title: "버스",
+      desc:
+        "경주역(KTX) 50번, 51번 → 고속·시외버스터미널에서 16번 환승 → 신평마을 정류장 하차, 도보 10분 내외\n" +
+        "경주역(KTX) 급행 1150번 → 경주월드 정류장 하차\n" +
+        "고속·시외버스터미널 100번, 150번 → 보문단지·경주월드 정류장 하차, 도보 25분 내외",
+    },
+    { title: "주차", desc: "최대 1,200대 주차 가능 (무료)" },
   ],
 
   contacts: [
-    { role: "신랑", name: "김신랑", phone: "010-0000-0000" },
-    { role: "신부", name: "박신부", phone: "010-0000-0000" },
+    { role: "신랑", name: "양수혁", phone: "010-3839-8774" },
+    { role: "신부", name: "옥연서", phone: "010-2876-2670" },
   ],
 
-  accounts: [
-    {
-      group: "신랑측",
-      items: [
-        { role: "신랑", holder: "김신랑", bank: "OO은행", number: "000-000-000000" },
-        { role: "아버지", holder: "김아버지", bank: "OO은행", number: "000-000-000000" },
-        { role: "어머니", holder: "이어머니", bank: "OO은행", number: "000-000-000000" },
-      ],
-    },
-    {
-      group: "신부측",
-      items: [
-        { role: "신부", holder: "박신부", bank: "OO은행", number: "000-000-000000" },
-        { role: "아버지", holder: "박아버지", bank: "OO은행", number: "000-000-000000" },
-        { role: "어머니", holder: "최어머니", bank: "OO은행", number: "000-000-000000" },
-      ],
-    },
-  ],
+  // 계좌 정보 확정 후 입력. 비어 있으면 ACCOUNT 섹션이 숨겨짐
+  accounts: [],
 
   // RSVP 수신 엔드포인트. 비워두면 콘솔 출력만 함
   // Apps Script 웹앱이면 rsvpPlainText: true (CORS preflight 회피)
@@ -462,7 +452,7 @@ function renderHero() {
 function renderInvite() {
   $("greeting").textContent = CONFIG.greeting;
   $("family").innerHTML = [CONFIG.groom, CONFIG.bride]
-    .map((x) => `<p><span class="parents">${esc(x.father)} · ${esc(x.mother)}</span><span class="rel">의 ${esc(x.relation)}</span><strong>${esc(x.name)}</strong></p>`)
+    .map((x) => `<p><span class="parents">${[x.father, x.mother].filter(Boolean).map(esc).join(" · ")}</span><span class="rel">의 ${esc(x.relation)}</span><strong>${esc(x.name)}</strong></p>`)
     .join("");
 }
 
@@ -606,6 +596,7 @@ function renderContacts() {
 
 function renderAccounts() {
   const root = $("accounts");
+  if (!CONFIG.accounts.length) { root.closest("section").hidden = true; return; }
   root.innerHTML = CONFIG.accounts
     .map((g, gi) => `<div class="acc-group">
       <button type="button" class="acc-toggle" aria-expanded="false" aria-controls="acc-${gi}">
