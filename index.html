@@ -331,8 +331,8 @@
 
 <!-- Kakao JS SDK (공유) -->
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
-<!-- Kakao Maps SDK: appkey에 JavaScript 키. services는 markerAddress 주소 검색용 -->
-<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=6c0e9f0a8fe71b8f20a75959dc1503dd&autoload=false&libraries=services"></script>
+<!-- Kakao Maps SDK: appkey에 JavaScript 키 -->
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=6c0e9f0a8fe71b8f20a75959dc1503dd&autoload=false"></script>
 
 <script>
 /* ============================================================
@@ -365,11 +365,9 @@ const CONFIG = {
     name: "더 프라미스 웨딩 컨벤션",
     mapName: "더 프라미스 웨딩 컨벤션", // 길찾기 목적지 이름
     address: "경북 경주시 보불로 391 룩스타워 6층 (강동워터파크 맞은편)",
-    // 마커 위치 주소. 페이지에서 카카오 주소 검색으로 좌표를 찾음
-    markerAddress: "경북 경주시 보불로 391", // 강동 룩스타워 (지번 천군동 1697)
-    // markerAddress 검색 실패 시 쓰는 좌표 (보불로 391 기준, 근사값)
-    lat: 35.8232653,
-    lng: 129.2962386,
+    // 카카오 장소 검색 "더프라미스 웨딩컨벤션" 결과 좌표 (강동 룩스타워)
+    lat: 35.8252517558582,
+    lng: 129.290877383753,
   },
   transport: [
     {
@@ -560,12 +558,9 @@ function renderLocation() {
   $("venue-addr").textContent = v.address;
 
   const dest = encodeURIComponent(v.mapName || v.name);
-  const setNav = (lat, lng) => {
-    $("nav-kakao").href = `https://map.kakao.com/link/to/${dest},${lat},${lng}`;
-    // 티맵은 앱 스킴. 미설치 기기에선 동작하지 않음
-    $("nav-tmap").href = `tmap://route?goalname=${dest}&goalx=${lng}&goaly=${lat}`;
-  };
-  setNav(v.lat, v.lng);
+  $("nav-kakao").href = `https://map.kakao.com/link/to/${dest},${v.lat},${v.lng}`;
+  // 티맵은 앱 스킴. 미설치 기기에선 동작하지 않음
+  $("nav-tmap").href = `tmap://route?goalname=${dest}&goalx=${v.lng}&goaly=${v.lat}`;
   $("nav-naver").href = `https://map.naver.com/p/search/${encodeURIComponent(v.address)}`;
 
   $("transport").innerHTML = CONFIG.transport
@@ -580,17 +575,7 @@ function renderLocation() {
       const pos = new kakao.maps.LatLng(v.lat, v.lng);
       const map = new kakao.maps.Map(mapEl, { center: pos, level: 3, draggable: false, disableDoubleClickZoom: true });
       map.setZoomable(false); // 스크롤 중 지도 확대 방지
-      const marker = new kakao.maps.Marker({ position: pos, map });
-
-      if (v.markerAddress && kakao.maps.services) {
-        new kakao.maps.services.Geocoder().addressSearch(v.markerAddress, (res, status) => {
-          if (status !== kakao.maps.services.Status.OK || !res.length) return;
-          const found = new kakao.maps.LatLng(res[0].y, res[0].x);
-          marker.setPosition(found);
-          map.setCenter(found);
-          setNav(res[0].y, res[0].x);
-        });
-      }
+      new kakao.maps.Marker({ position: pos, map });
     });
   } else {
     mapEl.textContent = "지도를 불러오지 못했습니다. 아래 버튼으로 길찾기를 이용해 주세요.";
