@@ -18,8 +18,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500&display=swap" />
-<!-- 대표 사진 위 손글씨. 쓰는 글자만 받도록 text= 지정 (문구 바꾸면 여기도 수정) -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Brush+Script&text=%EC%9A%B0%EB%A6%AC%2C%20%EA%B2%B0%ED%98%BC%ED%95%A9%EB%8B%88%EB%8B%A4&display=block" />
+<!-- 대표 사진 위 이름. 이름 글자만 받도록 text= 지정 (이름 바꾸면 여기도 수정) -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang&text=%EC%96%91%EC%88%98%ED%98%81%EC%98%A5%EC%97%B0%EC%84%9C&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&text=OURWEDDINGAY%20&display=swap" />
 <style>
   :root {
     color-scheme: light;
@@ -74,25 +75,20 @@
   /* Hero */
   .hero { padding: 0 0 56px; }
   .hero-photo { position: relative; overflow: hidden; aspect-ratio: 3 / 4; background: var(--fill); }
-  /* 사진 위 손글씨: 왼쪽부터 마스크를 걷어내 써지는 것처럼 보임 */
-  .hero-script {
-    position: absolute; left: 0; right: 0; top: 24%; transform: translateY(-50%);
-    font-family: "Nanum Brush Script", cursive; font-size: clamp(52px, 16vw, 76px); line-height: 1;
-    color: #fff; text-shadow: 0 2px 14px rgba(0, 0, 0, 0.22); pointer-events: none;
-    visibility: hidden;
-    -webkit-mask-image: linear-gradient(90deg, #000 45%, transparent 55%);
-    mask-image: linear-gradient(90deg, #000 45%, transparent 55%);
-    -webkit-mask-size: 250% 100%; mask-size: 250% 100%;
-    -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
-    -webkit-mask-position: 100% 0; mask-position: 100% 0;
+  /* 사진 위 이름: OUR WEDDING DAY / 신랑 / ♡ / 신부 */
+  .hero-title {
+    position: absolute; left: 0; right: 0; top: 4%;
+    color: #fff; text-shadow: 0 1px 10px rgba(0, 0, 0, 0.18); pointer-events: none;
+    animation: hero-fade 1.6s ease-out 0.3s both;
   }
-  .hero-script.go { visibility: visible; animation: write 4s ease-in-out forwards; }
-  @keyframes write { to { -webkit-mask-position: 0 0; mask-position: 0 0; } }
-  @media (prefers-reduced-motion: reduce) {
-    .hero-script.go { animation: none; -webkit-mask-image: none; mask-image: none; }
+  .hero-title .kicker {
+    font-family: "Cormorant Garamond", serif; font-weight: 500; font-size: 15px; letter-spacing: 0.32em;
+    margin-bottom: 10px;
   }
-  /* 반딧불이: 화면 전체에 겹치는 캔버스. 터치는 통과 */
-  #fireflies { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 50; pointer-events: none; }
+  .hero-title .name { font-family: "Gowun Batang", serif; font-size: 30px; line-height: 1.2; letter-spacing: 0.04em; }
+  .hero-title .heart { font-size: 13px; line-height: 1; margin: 4px 0 6px; }
+  @keyframes hero-fade { from { opacity: 0; transform: translateY(6px); } }
+  @media (prefers-reduced-motion: reduce) { .hero-title { animation: none; } }
   .hero-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .hero-kicker { margin-top: 48px; font-size: 18px; letter-spacing: 0.3em; color: var(--muted); }
   .hero-names { margin-top: 14px; font-weight: 400; font-size: 36px; letter-spacing: 0.06em; }
@@ -251,7 +247,12 @@
   <section class="hero">
     <div class="hero-photo">
       <img id="hero-img" alt="신랑 신부 메인 사진" fetchpriority="high" />
-      <p class="hero-script" id="hero-script">우리, 결혼합니다</p>
+      <div class="hero-title" id="hero-title">
+        <p class="kicker">OUR WEDDING DAY</p>
+        <p class="name" id="hero-groom"></p>
+        <p class="heart" aria-hidden="true">♡</p>
+        <p class="name" id="hero-bride"></p>
+      </div>
     </div>
     <p class="hero-kicker">THE WEDDING OF</p>
     <p class="hero-names" id="hero-names"></p>
@@ -332,7 +333,6 @@
     <button type="button" class="btn-line" id="share-link">링크 복사하기</button>
   </section>
 </main>
-<canvas id="fireflies" aria-hidden="true"></canvas>
 
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="사진 크게 보기">
   <img id="lb-img" alt="" />
@@ -461,6 +461,8 @@ function renderHero() {
   const { groom, bride, venue } = CONFIG;
   const p = kst(WEDDING);
   $("hero-img").src = CONFIG.heroImage;
+  $("hero-groom").textContent = groom.name;
+  $("hero-bride").textContent = bride.name;
   $("hero-names").innerHTML = `${esc(groom.name)} <span class="sep">|</span> ${esc(bride.name)}`;
   $("hero-when").innerHTML = `${p.y}년 ${p.m}월 ${p.d}일 ${WEEK[p.w]}요일 ${timeText(p)}<br>${esc(venue.name)}`;
 }
@@ -723,80 +725,6 @@ document.addEventListener("error", (e) => {
   if (e.target.tagName === "IMG") e.target.style.visibility = "hidden";
 }, true);
 
-// 손글씨 폰트가 준비되면 4초 동안 써지는 애니메이션 시작 (폰트가 늦으면 1.5초 뒤 그냥 시작)
-function initHeroScript() {
-  const el = $("hero-script");
-  const timeout = new Promise((r) => setTimeout(r, 1500));
-  const font = document.fonts ? document.fonts.load('60px "Nanum Brush Script"', el.textContent) : timeout;
-  Promise.race([font, timeout]).catch(() => {}).then(() => setTimeout(() => el.classList.add("go"), 300));
-}
-
-// 반딧불이: 화면 전체를 은은하게 떠다니며 깜빡임
-function initFireflies() {
-  const canvas = $("fireflies");
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) { canvas.remove(); return; }
-  const ctx = canvas.getContext("2d");
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-
-  // 빛 번짐 모양을 미리 그려두고 재사용
-  const sprite = document.createElement("canvas");
-  const S = 64;
-  sprite.width = sprite.height = S;
-  const sg = sprite.getContext("2d");
-  const grad = sg.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2);
-  grad.addColorStop(0, "rgba(255, 246, 200, 1)");
-  grad.addColorStop(0.18, "rgba(255, 214, 102, 0.9)");
-  grad.addColorStop(0.45, "rgba(255, 190, 60, 0.25)");
-  grad.addColorStop(1, "rgba(255, 190, 60, 0)");
-  sg.fillStyle = grad;
-  sg.fillRect(0, 0, S, S);
-
-  let w = 0, h = 0, flies = [];
-  const rand = (a, b) => a + Math.random() * (b - a);
-  const spawn = () => ({
-    x: rand(0, w), y: rand(0, h),
-    size: rand(10, 22),               // 번짐 포함 지름(px)
-    speed: rand(0.08, 0.25),          // 프레임당 이동량
-    dir: rand(0, Math.PI * 2),
-    turn: rand(0.004, 0.012),
-    phase: rand(0, Math.PI * 2),
-    blink: rand(0.008, 0.02),
-  });
-  const resize = () => {
-    w = innerWidth; h = innerHeight;
-    canvas.width = w * dpr; canvas.height = h * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const count = Math.round(Math.min(32, Math.max(14, (w * h) / 16000)));
-    while (flies.length < count) flies.push(spawn());
-    flies.length = count;
-  };
-  resize();
-  addEventListener("resize", resize);
-
-  let raf = 0;
-  const tick = () => {
-    ctx.clearRect(0, 0, w, h);
-    for (const f of flies) {
-      f.dir += Math.sin(f.phase * 0.7) * f.turn;   // 천천히 방향을 바꾸며 떠다님
-      f.x += Math.cos(f.dir) * f.speed;
-      f.y += Math.sin(f.dir) * f.speed - 0.04;      // 살짝 위로 떠오름
-      f.phase += f.blink;
-      if (f.x < -20) f.x = w + 20; else if (f.x > w + 20) f.x = -20;
-      if (f.y < -20) f.y = h + 20; else if (f.y > h + 20) f.y = -20;
-      ctx.globalAlpha = 0.25 + 0.55 * (0.5 + 0.5 * Math.sin(f.phase));
-      ctx.drawImage(sprite, f.x - f.size / 2, f.y - f.size / 2, f.size, f.size);
-    }
-    ctx.globalAlpha = 1;
-    raf = requestAnimationFrame(tick);
-  };
-  raf = requestAnimationFrame(tick);
-  // 탭이 안 보일 땐 멈춰서 배터리 아낌
-  document.addEventListener("visibilitychange", () => {
-    cancelAnimationFrame(raf);
-    if (!document.hidden) raf = requestAnimationFrame(tick);
-  });
-}
-
 // iOS Safari는 user-scalable=no를 무시해서 핀치 확대를 직접 막음
 ["gesturestart", "gesturechange", "gestureend"].forEach((t) =>
   document.addEventListener(t, (e) => e.preventDefault(), { passive: false })
@@ -812,8 +740,6 @@ renderContacts();
 renderAccounts();
 initRsvp();
 initShare();
-initHeroScript();
-initFireflies();
 </script>
 </body>
 </html>
