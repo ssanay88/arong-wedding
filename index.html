@@ -90,10 +90,7 @@
   @keyframes hero-fade { from { opacity: 0; transform: translateY(6px); } }
   @media (prefers-reduced-motion: reduce) { .hero-title { animation: none; } }
   .hero-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .hero-kicker { margin-top: 48px; font-size: 18px; letter-spacing: 0.3em; color: var(--muted); }
-  .hero-names { margin-top: 14px; font-weight: 400; font-size: 36px; letter-spacing: 0.06em; }
-  .hero-names .sep { color: var(--faint); margin: 0 4px; }
-  .hero-when { margin-top: 14px; font-size: 21px; color: var(--sub); }
+  .hero-when { margin-top: 40px; font-size: 21px; color: var(--sub); }
   .vline { width: 1px; height: 40px; background: var(--border); margin: 0 auto; }
 
   /* Invitation */
@@ -254,8 +251,6 @@
         <p class="name" id="hero-bride"></p>
       </div>
     </div>
-    <p class="hero-kicker">THE WEDDING OF</p>
-    <p class="hero-names" id="hero-names"></p>
     <p class="hero-when" id="hero-when"></p>
   </section>
 
@@ -357,8 +352,8 @@ const CONFIG = {
   kakaoJsKey: "6c0e9f0a8fe71b8f20a75959dc1503dd",
   ogImage: "images/og.jpg",
 
-  groom: { name: "양수혁", father: "양재호", mother: "배영신", relation: "장남" },
-  bride: { name: "옥연서", father: "옥동일", mother: "이순옥", relation: "장녀" },
+  groom: { name: "양수혁", father: "양재호", mother: "배영신", relation: "아들" },
+  bride: { name: "옥연서", father: "옥동일", mother: "이순옥", relation: "딸" },
 
   // KST 기준, ISO 8601 + 오프셋
   dateTime: "2027-03-06T13:00:00+09:00",
@@ -463,7 +458,6 @@ function renderHero() {
   $("hero-img").src = CONFIG.heroImage;
   $("hero-groom").textContent = groom.name;
   $("hero-bride").textContent = bride.name;
-  $("hero-names").innerHTML = `${esc(groom.name)} <span class="sep">|</span> ${esc(bride.name)}`;
   $("hero-when").innerHTML = `${p.y}년 ${p.m}월 ${p.d}일 ${WEEK[p.w]}요일 ${timeText(p)}<br>${esc(venue.name)}`;
 }
 
