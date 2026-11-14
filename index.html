@@ -34,6 +34,7 @@
     --fill-2: #F7F7F7;
     --sunday: #C0392B;
     --bg: #FFFFFF;
+    --accent: #5B7590;
   }
   *, *::before, *::after { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
@@ -177,26 +178,34 @@
   .contact .acts a { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; }
 
   /* Account */
-  .accounts { text-align: left; border-top: 1px solid var(--text); }
-  .acc-group { border-bottom: 1px solid var(--line); }
+  .acc-title { margin-bottom: 20px; font-size: 26px; font-weight: 400; letter-spacing: 0.04em; color: var(--accent); }
+  .acc-desc { margin-bottom: 32px; font-size: 18px; line-height: 1.7; color: var(--sub); white-space: pre-line; }
+  .accounts { display: grid; gap: 12px; text-align: left; }
+  .acc-group { border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
   .acc-toggle {
-    width: 100%; min-height: 52px; padding: 0; border: 0; background: transparent;
-    display: flex; justify-content: space-between; align-items: center; font-size: 22px; font-weight: 400;
+    width: 100%; min-height: 60px; padding: 0 20px; border: 0; background: transparent;
+    display: flex; justify-content: space-between; align-items: center; font-size: 21px; font-weight: 400;
   }
-  .acc-toggle .sign { color: var(--muted); font-size: 27px; font-weight: 300; }
-  .acc-list { padding: 0 0 12px; }
+  .acc-toggle .chev {
+    width: 14px; height: 14px; margin-right: 4px; border-right: 1.5px solid var(--sub); border-bottom: 1.5px solid var(--sub);
+    transform: translateY(-3px) rotate(45deg); transition: transform 0.2s;
+  }
+  .acc-toggle[aria-expanded="true"] .chev { transform: translateY(3px) rotate(-135deg); }
+  .acc-list { padding: 0 16px 16px; display: grid; gap: 16px; }
   .acc-list[hidden] { display: none; }
-  .acc-item {
-    display: flex; justify-content: space-between; align-items: center; gap: 12px;
-    padding: 10px 14px; background: var(--fill-2); margin-top: 4px;
+  .acc-who { margin-bottom: 8px; font-size: 20px; }
+  .acc-who .role { margin-right: 10px; font-size: 17px; color: var(--muted); }
+  .acc-box {
+    display: flex; justify-content: space-between; align-items: center; gap: 8px;
+    min-height: 48px; padding: 0 6px 0 16px; border-radius: 6px; background: var(--fill); font-size: 18px; color: var(--sub);
   }
-  .acc-info { font-size: 20px; line-height: 1.6; }
-  .acc-info .role { color: var(--muted); }
-  .acc-info .num { color: var(--sub); }
-  .btn-sm {
-    flex-shrink: 0; min-height: 44px; padding: 0 14px; border: 1px solid var(--border);
-    background: var(--bg); font-size: 18px;
+  .acc-box.empty { color: var(--faint); }
+  .acc-copy {
+    flex-shrink: 0; width: 44px; height: 44px; border: 0; background: transparent; color: var(--muted);
+    display: flex; align-items: center; justify-content: center;
   }
+  @media (prefers-reduced-motion: reduce) { .acc-toggle .chev { transition: none; } }
+
 
   /* RSVP */
   .rsvp { display: grid; gap: 12px; text-align: left; }
@@ -292,8 +301,10 @@
   </section>
 
   <section class="sec">
-    <h2 class="sec-title tight">ACCOUNT</h2>
-    <p class="sec-desc">축하의 마음을 전해주세요.</p>
+    <h2 class="acc-title">마음 전하실 곳</h2>
+    <p class="acc-desc">전해주시는 따뜻한 축하의 마음을
+오래도록 간직하며
+행복한 모습으로 보답하며 살겠습니다.</p>
     <div class="accounts" id="accounts"></div>
   </section>
 
@@ -393,8 +404,25 @@ const CONFIG = {
     { role: "신부", name: "옥연서", phone: "010-2876-2670" },
   ],
 
-  // 계좌 정보 확정 후 입력. 비어 있으면 ACCOUNT 섹션이 숨겨짐
-  accounts: [],
+  // 계좌번호(number)가 비어 있으면 "계좌번호 준비 중"으로 보이고 복사 버튼이 숨겨짐
+  accounts: [
+    {
+      group: "신랑 측",
+      items: [
+        { role: "신랑", holder: "양수혁", bank: "", number: "" },
+        { role: "아버지", holder: "양재호", bank: "", number: "" },
+        { role: "어머니", holder: "배영신", bank: "", number: "" },
+      ],
+    },
+    {
+      group: "신부 측",
+      items: [
+        { role: "신부", holder: "옥연서", bank: "", number: "" },
+        { role: "아버지", holder: "옥동일", bank: "", number: "" },
+        { role: "어머니", holder: "이순옥", bank: "", number: "" },
+      ],
+    },
+  ],
 
   // RSVP 수신 엔드포인트. 비워두면 콘솔 출력만 함
   // Apps Script 웹앱이면 rsvpPlainText: true (CORS preflight 회피)
@@ -409,6 +437,7 @@ const WEEK = ["일", "월", "화", "수", "목", "금", "토"];
 const pad = (n) => String(n).padStart(2, "0");
 const ICON_TEL = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>';
 const ICON_SMS = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4z"/></svg>';
+const ICON_COPY = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h2"/></svg>';
 
 const WEDDING = new Date(CONFIG.dateTime);
 
@@ -606,13 +635,18 @@ function renderAccounts() {
   root.innerHTML = CONFIG.accounts
     .map((g, gi) => `<div class="acc-group">
       <button type="button" class="acc-toggle" aria-expanded="false" aria-controls="acc-${gi}">
-        <span>${esc(g.group)}</span><span class="sign" aria-hidden="true">+</span>
+        <span>${esc(g.group)}</span><span class="chev" aria-hidden="true"></span>
       </button>
       <div class="acc-list" id="acc-${gi}" hidden>
-        ${g.items.map((a) => `<div class="acc-item">
-          <div class="acc-info"><span class="role">${esc(a.role)}</span> ${esc(a.holder)}<br><span class="num">${esc(a.bank)} ${esc(a.number)}</span></div>
-          <button type="button" class="btn-sm" data-copy="${esc(`${a.bank} ${a.number}`)}">복사</button>
-        </div>`).join("")}
+        ${g.items.map((a) => {
+          const acc = [a.bank, a.number].filter(Boolean).join(" ");
+          return `<div>
+            <p class="acc-who"><span class="role">${esc(a.role)}</span>${esc(a.holder)}</p>
+            ${a.number
+              ? `<div class="acc-box"><span>${esc(acc)}</span><button type="button" class="acc-copy" data-copy="${esc(acc)}" aria-label="${esc(a.role)} 계좌번호 복사">${ICON_COPY}</button></div>`
+              : `<div class="acc-box empty"><span>계좌번호 준비 중</span></div>`}
+          </div>`;
+        }).join("")}
       </div>
     </div>`)
     .join("");
@@ -622,7 +656,6 @@ function renderAccounts() {
     if (toggle) {
       const open = toggle.getAttribute("aria-expanded") !== "true";
       toggle.setAttribute("aria-expanded", String(open));
-      toggle.querySelector(".sign").textContent = open ? "−" : "+";
       $(toggle.getAttribute("aria-controls")).hidden = !open;
       return;
     }
@@ -630,10 +663,7 @@ function renderAccounts() {
     if (!btn) return;
     const ok = await copyText(btn.dataset.copy);
     if (!ok) return toast("복사하지 못했습니다. 계좌번호를 길게 눌러 복사해 주세요.");
-    btn.textContent = "복사됨";
     toast("계좌번호를 복사했습니다.");
-    clearTimeout(btn._t);
-    btn._t = setTimeout(() => { btn.textContent = "복사"; }, 1600);
   });
 }
 
