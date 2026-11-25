@@ -424,10 +424,11 @@ const CONFIG = {
     },
   ],
 
-  // RSVP 수신 엔드포인트. 비워두면 콘솔 출력만 함
+  // RSVP 수신 엔드포인트 (apps-script/rsvp.gs 배포 후 나오는 웹 앱 URL)
+  // 비워두면 응답이 저장되지 않으므로 RSVP 섹션을 숨김
   // Apps Script 웹앱이면 rsvpPlainText: true (CORS preflight 회피)
-  rsvpEndpoint: "",
-  rsvpPlainText: false,
+  rsvpEndpoint: "https://script.google.com/macros/s/AKfycbzXf361XTi9dla8aBwlaKpvLpBCDdQ-r82PyejMt6_c8fhbnOr33STnUWMftci7i1rH/exec",
+  rsvpPlainText: true,
 };
 
 /* ============================================================ */
@@ -672,6 +673,7 @@ function initRsvp() {
   const state = { side: null, attend: null };
   const err = $("rsvp-error");
   const submit = $("rsvp-submit");
+  if (!CONFIG.rsvpEndpoint) { form.closest("section").hidden = true; return; }
 
   form.querySelectorAll(".seg").forEach((seg) => {
     seg.addEventListener("click", (e) => {
@@ -695,16 +697,14 @@ function initRsvp() {
     submit.disabled = true;
     submit.textContent = "보내는 중";
     try {
-      if (CONFIG.rsvpEndpoint) {
-        const res = await fetch(CONFIG.rsvpEndpoint, {
-          method: "POST",
-          headers: { "Content-Type": CONFIG.rsvpPlainText ? "text/plain;charset=utf-8" : "application/json" },
-          body: JSON.stringify(data),
-        });
-        if (!res.ok) throw new Error(String(res.status));
-      } else {
-        console.log("RSVP (endpoint 미설정):", data);
-      }
+      const res = await fetch(CONFIG.rsvpEndpoint, {
+        method: "POST",
+        headers: { "Content-Type": CONFIG.rsvpPlainText ? "text/plain;charset=utf-8" : "application/json" },
+        body: JSON.stringify(data),
+      });
+      // Apps Script 는 오류여도 200 을 주므로 본문의 ok 로 성공 판단
+      const body = await res.json().catch(() => null);
+      if (!res.ok || !body || !body.ok) throw new Error(String(res.status));
       submit.textContent = "전달되었습니다. 감사합니다";
       form.name.value = "";
     } catch {
